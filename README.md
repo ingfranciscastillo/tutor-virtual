@@ -1,36 +1,206 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tutor Virtual por Materia (MVP)
 
-## Getting Started
+Una aplicación web donde estudiantes pueden seleccionar una materia, escribir preguntas y recibir respuestas pedagógicas generadas por IA adaptadas al nivel educativo.
 
-First, run the development server:
+## Características
+
+- ✅ Selección de materia y nivel educativo
+- ✅ Chat interactivo con IA pedagógica
+- ✅ Historial de conversaciones por usuario
+- ✅ Exportación a PDF
+- ✅ Autenticación con Clerk
+- ✅ Base de datos con Neon + Drizzle ORM
+- ✅ Soporte para OpenAI y Anthropic
+
+## Stack Tecnológico
+
+- **Framework**: Next.js 15 (App Router) + TypeScript
+- **UI**: Tailwind CSS + ShadCN UI
+- **Formularios**: react-hook-form + Zod
+- **IA**: AI SDK (OpenAI/Anthropic)
+- **Base de datos**: Neon PostgreSQL + Drizzle ORM
+- **Autenticación**: Clerk
+- **Subida de archivos**: UploadThing (opcional)
+- **PDF**: pdf-lib
+
+## Instalación
+
+### 1. Clona el repositorio
+
+```bash
+git clone <url-del-repo>
+cd tutor-virtual-materia
+```
+
+### 2. Instala dependencias
+
+```bash
+npm install
+```
+
+### 3. Configura variables de entorno
+
+Copia `.env.example` a `.env.local`:
+
+```bash
+cp .env.example .env.local
+```
+
+Configura las siguientes variables:
+
+#### Base de datos (Neon)
+
+1. Crea una cuenta en [Neon](https://neon.tech)
+2. Crea una nueva base de datos
+3. Copia la URL de conexión a `DATABASE_URL`
+
+#### Autenticación (Clerk)
+
+1. Crea una cuenta en [Clerk](https://clerk.com)
+2. Crea una nueva aplicación
+3. Copia las claves a `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` y `CLERK_SECRET_KEY`
+
+#### IA (Elige uno)
+
+**Para OpenAI:**
+
+```env
+OPENAI_API_KEY=sk-...
+AI_PROVIDER=openai
+```
+
+**Para Anthropic:**
+
+```env
+ANTHROPIC_API_KEY=sk-ant-...
+AI_PROVIDER=anthropic
+```
+
+### 4. Ejecuta migraciones
+
+```bash
+npm run migrate
+```
+
+### 5. (Opcional) Carga datos de ejemplo
+
+```bash
+npm run db:seed
+```
+
+### 6. Inicia la aplicación
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+La aplicación estará disponible en `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts disponibles
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` - Inicia el servidor de desarrollo
+- `npm run build` - Construye la aplicación para producción
+- `npm run start` - Inicia el servidor de producción
+- `npm run lint` - Ejecuta ESLint
+- `npm run lint:fix` - Ejecuta ESLint con corrección automática
+- `npm run migrate` - Ejecuta migraciones de base de datos
+- `npm run db:studio` - Abre Drizzle Studio (visualizador de BD)
+- `npm run db:seed` - Carga datos de ejemplo
 
-## Learn More
+## Uso
 
-To learn more about Next.js, take a look at the following resources:
+### 1. Registro/Inicio de sesión
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Visita la aplicación y regístrate o inicia sesión
+- Puedes usar el modo de invitado para probar sin autenticación
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. Selecciona materia y nivel
 
-## Deploy on Vercel
+- Elige una materia (Matemáticas, Historia, Física, etc.)
+- Selecciona tu nivel educativo (Primaria, Secundaria, Universidad)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. Haz preguntas
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Escribe tu pregunta en el chat
+- Recibe respuestas pedagógicas adaptadas a tu nivel
+- Ve el historial de todas tus conversaciones
+
+### 4. Exporta conversaciones
+
+- Usa el botón de PDF para descargar conversaciones
+
+## Arquitectura
+
+### Frontend
+
+- **App Router de Next.js** para el enrutado
+- **ShadCN UI** para componentes de interfaz consistentes
+- **Tailwind CSS** para estilado utilitario
+- **React Hook Form + Zod** para manejo robusto de formularios
+
+### Backend
+
+- **API Routes de Next.js** para endpoints del servidor
+- **AI SDK** como abstracción para múltiples proveedores de IA
+- **Drizzle ORM** para consultas type-safe a la base de datos
+- **Clerk** para autenticación y gestión de usuarios
+
+### Base de datos
+
+Esquema principal:
+
+- `users` - Información de usuarios (gestionado por Clerk)
+- `chats` - Sesiones de chat por materia/nivel
+- `messages` - Mensajes individuales (pregunta/respuesta)
+
+## Cambiar proveedor de IA
+
+Para cambiar entre OpenAI y Anthropic, simplemente modifica la variable de entorno:
+
+```env
+# Para OpenAI
+AI_PROVIDER=openai
+OPENAI_API_KEY=sk-...
+
+# Para Anthropic
+AI_PROVIDER=anthropic
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+El código detecta automáticamente el proveedor y ajusta la configuración.
+
+## Personalización de prompts
+
+Los prompts están en `lib/prompts.ts` y pueden personalizarse por:
+
+- Materia específica
+- Nivel educativo
+- Tipo de respuesta deseada
+
+## Desarrollo
+
+### Estructura de carpetas
+
+```
+├── app/                 # App Router de Next.js
+│   ├── (auth)/         # Rutas de autenticación
+│   ├── api/            # API Routes
+│   ├── subject/        # Páginas de chat por materia
+│   └── globals.css     # Estilos globales
+├── components/         # Componentes React reutilizables
+├── lib/               # Utilidades y configuración
+├── migrations/        # Migraciones de base de datos
+└── scripts/          # Scripts de desarrollo
+```
+
+### Contribución
+
+1. Fork del proyecto
+2. Crea una rama feature (`git checkout -b feature/nueva-caracteristica`)
+3. Commit cambios (`git commit -am 'Agrega nueva característica'`)
+4. Push a la rama (`git push origin feature/nueva-caracteristica`)
+5. Crea un Pull Request
+
+## Licencia
+
+MIT
