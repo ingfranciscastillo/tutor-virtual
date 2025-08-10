@@ -31,12 +31,12 @@ export function SubjectSelector() {
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="w-full mx-auto bg-white/30 dark:bg-slate-900/30 backdrop-blur-md">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl">
           Comienza tu sesión de aprendizaje
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-slate-900 dark:text-white">
           Selecciona la materia y tu nivel educativo para recibir explicaciones
           personalizadas
         </CardDescription>
@@ -44,15 +44,15 @@ export function SubjectSelector() {
       <CardContent className="space-y-6">
         {/* Selector de Materia */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">Materia</label>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <label className="text-sm font-medium text-slate-700">Materia</label>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             {SUBJECTS.map((subject) => (
               <button
                 key={subject.id}
                 onClick={() => setSelectedSubject(subject.id)}
-                className={`p-4 rounded-lg border-2 transition-all hover:shadow-md ${
+                className={`p-4 rounded-lg transition-all hover:shadow-md ${
                   selectedSubject === subject.id
-                    ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                    ? "border-slate-500 bg-indigo-50/80 text-slate-700"
                     : "border-gray-200 hover:border-gray-300"
                 }`}
               >
@@ -65,7 +65,7 @@ export function SubjectSelector() {
 
         {/* Selector de Nivel */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">
+          <label className="text-sm font-medium text-slate-700">
             Nivel Educativo
           </label>
           <Select value={selectedLevel} onValueChange={setSelectedLevel}>
@@ -89,7 +89,7 @@ export function SubjectSelector() {
         <Button
           onClick={handleStart}
           disabled={!selectedSubject || !selectedLevel}
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3"
+          className="w-full text-white py-3"
           size="lg"
         >
           Comenzar Sesión de Aprendizaje

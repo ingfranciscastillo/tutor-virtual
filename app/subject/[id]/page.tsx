@@ -24,13 +24,14 @@ export default async function SubjectPage({
   searchParams,
 }: SubjectPageProps) {
   const user = await currentUser();
+  const param = await params;
 
   // Si no hay nivel, redirigir a la página principal
   if (!searchParams.level) {
     redirect("/");
   }
 
-  const subject = SUBJECTS.find((s) => s.id === params.id);
+  const subject = SUBJECTS.find((s) => s.id === param.id);
   if (!subject) {
     redirect("/");
   }
@@ -71,9 +72,9 @@ export default async function SubjectPage({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen relative z-10">
       {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm">
+      <header className="border-b bg-white/30 backdrop-blur-xl">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <Link
@@ -94,7 +95,7 @@ export default async function SubjectPage({
 
           <div className="flex items-center space-x-4">
             <Brain className="h-6 w-6 text-indigo-600" />
-            {user && <UserButton afterSignOutUrl="/" />}
+            {user && <UserButton />}
           </div>
         </div>
       </header>

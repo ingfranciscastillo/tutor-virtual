@@ -35,7 +35,7 @@ export async function generateAIResponse({
     if (!process.env.OPENAI_API_KEY) {
       throw new Error("OPENAI_API_KEY no está configurada");
     }
-    model = openai("gpt-4o-mini");
+    model = openai("chatgpt-4o-latest");
   }
 
   try {
