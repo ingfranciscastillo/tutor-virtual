@@ -30,12 +30,12 @@ export async function generateAIResponse({
     if (!process.env.ANTHROPIC_API_KEY) {
       throw new Error("ANTHROPIC_API_KEY no está configurada");
     }
-    model = anthropic("claude-3-sonnet-20240229");
+    model = anthropic("claude-sonnet-4-20250514");
   } else {
     if (!process.env.OPENAI_API_KEY) {
       throw new Error("OPENAI_API_KEY no está configurada");
     }
-    model = openai("chatgpt-4o-latest");
+    model = openai("gpt-5");
   }
 
   try {
