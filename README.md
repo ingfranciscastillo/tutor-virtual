@@ -1,3 +1,6 @@
+![Pagina principal](captura.png)
+![Chat con la IA](captura2.png)
+
 # Tutor Virtual por Materia (MVP)
 
 Una aplicación web donde estudiantes pueden seleccionar una materia, escribir preguntas y recibir respuestas pedagógicas generadas por IA adaptadas al nivel educativo.

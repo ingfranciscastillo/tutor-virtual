@@ -1,4 +1,4 @@
-import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import { PDFDocument, rgb } from "pdf-lib";
 
 interface Message {
   content: string;
@@ -23,9 +23,10 @@ export async function generatePDF({
   const pdfDoc = await PDFDocument.create();
 
   // Configurar fuentes
-  const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const helveticaBoldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-
+  const fontBytes = await fetch("/fonts/NotoSans.tff").then((res) =>
+    res.arrayBuffer()
+  );
+  const notoSans = await pdfDoc.embedFont(fontBytes);
   // Configurar colores
   const primaryColor = rgb(0.2, 0.2, 0.8); // Azul
   const userColor = rgb(0.1, 0.1, 0.1); // Negro
@@ -45,7 +46,7 @@ export async function generatePDF({
     x: margin,
     y: currentY,
     size: 20,
-    font: helveticaBoldFont,
+    font: notoSans,
     color: primaryColor,
   });
   currentY -= 40;
@@ -55,7 +56,7 @@ export async function generatePDF({
     x: margin,
     y: currentY,
     size: 12,
-    font: helveticaFont,
+    font: notoSans,
     color: userColor,
   });
   currentY -= 20;
@@ -64,7 +65,7 @@ export async function generatePDF({
     x: margin,
     y: currentY,
     size: 12,
-    font: helveticaFont,
+    font: notoSans,
     color: userColor,
   });
   currentY -= 20;
@@ -73,7 +74,7 @@ export async function generatePDF({
     x: margin,
     y: currentY,
     size: 12,
-    font: helveticaFont,
+    font: notoSans,
     color: userColor,
   });
   currentY -= 40;
@@ -99,25 +100,20 @@ export async function generatePDF({
     }
 
     // Encabezado del mensaje
-    const senderText = isUser ? "👤 Estudiante:" : "🤖 Tutor Virtual:";
+    const senderText = isUser ? "Estudiante:" : "Tutor Virtual:";
     const senderColor = isUser ? primaryColor : rgb(0.2, 0.7, 0.2);
 
     page.drawText(senderText, {
       x: margin,
       y: currentY,
       size: 12,
-      font: helveticaBoldFont,
+      font: notoSans,
       color: senderColor,
     });
     currentY -= 25;
 
     // Contenido del mensaje
-    const lines = wrapText(
-      message.content,
-      contentWidth - 20,
-      helveticaFont,
-      10
-    );
+    const lines = wrapText(message.content, contentWidth - 20, notoSans, 10);
 
     for (const line of lines) {
       // Verificar si necesitamos nueva página
@@ -130,7 +126,7 @@ export async function generatePDF({
         x: margin + 15,
         y: currentY,
         size: 10,
-        font: helveticaFont,
+        font: notoSans,
         color: isUser ? userColor : assistantColor,
       });
       currentY -= 15;
@@ -138,11 +134,11 @@ export async function generatePDF({
 
     // Timestamp
     const timestamp = new Date(message.createdAt).toLocaleString("es-ES");
-    page.drawText(`⏰ ${timestamp}`, {
+    page.drawText(`${timestamp}`, {
       x: margin + 15,
       y: currentY,
       size: 8,
-      font: helveticaFont,
+      font: notoSans,
       color: rgb(0.6, 0.6, 0.6),
     });
     currentY -= 30;
@@ -203,26 +199,29 @@ function wrapText(
   font: any,
   fontSize: number
 ): string[] {
-  const words = text.split(" ");
+  const paragraphs = text.split("\n"); // separa por saltos de línea
   const lines: string[] = [];
-  let currentLine = "";
 
-  for (const word of words) {
-    const testLine = currentLine ? `${currentLine} ${word}` : word;
-    const textWidth = font.widthOfTextAtSize(testLine, fontSize);
+  for (const paragraph of paragraphs) {
+    const words = paragraph.split(" ");
+    let currentLine = "";
 
-    if (textWidth <= maxWidth) {
-      currentLine = testLine;
-    } else {
-      if (currentLine) {
-        lines.push(currentLine);
+    for (const word of words) {
+      const testLine = currentLine ? `${currentLine} ${word}` : word;
+      const textWidth = font.widthOfTextAtSize(testLine, fontSize);
+
+      if (textWidth <= maxWidth) {
+        currentLine = testLine;
+      } else {
+        if (currentLine) lines.push(currentLine);
+        currentLine = word;
       }
-      currentLine = word;
     }
-  }
 
-  if (currentLine) {
-    lines.push(currentLine);
+    if (currentLine) lines.push(currentLine);
+
+    // Añade una línea vacía para respetar el salto de párrafo
+    lines.push("");
   }
 
   return lines;
