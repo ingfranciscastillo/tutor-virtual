@@ -1,7 +1,5 @@
-import { openai } from "@ai-sdk/openai";
-import { anthropic } from "@ai-sdk/anthropic";
+import { groq } from "@ai-sdk/groq";
 import { generateText } from "ai";
-import { AI_PROVIDERS, type AIProvider } from "./constants";
 import { createPrompt } from "@/lib/prompts";
 
 interface GenerateAIResponseParams {
@@ -20,23 +18,12 @@ export async function generateAIResponse({
   level,
   context = [],
 }: GenerateAIResponseParams): Promise<string> {
-  const provider =
-    (process.env.AI_PROVIDER as AIProvider) || AI_PROVIDERS.OPENAI;
-
-  // Configurar el modelo según el proveedor
-  let model;
-
-  if (provider === AI_PROVIDERS.ANTHROPIC) {
-    if (!process.env.ANTHROPIC_API_KEY) {
-      throw new Error("ANTHROPIC_API_KEY no está configurada");
-    }
-    model = anthropic("claude-sonnet-4-20250514");
-  } else {
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error("OPENAI_API_KEY no está configurada");
-    }
-    model = openai("gpt-5");
+  if (!process.env.GROQ_API_KEY) {
+    throw new Error("GROQ_API_KEY no está configurada en el archivo .env");
   }
+
+  // Configurar el modelo de Groq
+  const model = groq("llama-3.3-70b-versatile");
 
   try {
     // Crear el prompt completo
@@ -46,7 +33,7 @@ export async function generateAIResponse({
     const messages = [
       { role: "system" as const, content: systemPrompt },
       ...context.map((msg) => ({
-        role: msg.role as const,
+        role: msg.role,
         content: msg.content,
       })),
       { role: "user" as const, content: message },

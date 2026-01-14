@@ -1,4 +1,4 @@
-import { PDFDocument, rgb } from "pdf-lib";
+import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 
 interface Message {
   content: string;
@@ -22,11 +22,9 @@ export async function generatePDF({
   // Crear nuevo documento PDF
   const pdfDoc = await PDFDocument.create();
 
-  // Configurar fuentes
-  const fontBytes = await fetch("/fonts/NotoSans.tff").then((res) =>
-    res.arrayBuffer()
-  );
-  const notoSans = await pdfDoc.embedFont(fontBytes);
+  // Configurar fuentes estándar (no requieren fontkit)
+  const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const helveticaBoldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   // Configurar colores
   const primaryColor = rgb(0.2, 0.2, 0.8); // Azul
   const userColor = rgb(0.1, 0.1, 0.1); // Negro
@@ -46,7 +44,7 @@ export async function generatePDF({
     x: margin,
     y: currentY,
     size: 20,
-    font: notoSans,
+    font: helveticaBoldFont,
     color: primaryColor,
   });
   currentY -= 40;
@@ -56,7 +54,7 @@ export async function generatePDF({
     x: margin,
     y: currentY,
     size: 12,
-    font: notoSans,
+    font: helveticaFont,
     color: userColor,
   });
   currentY -= 20;
@@ -65,7 +63,7 @@ export async function generatePDF({
     x: margin,
     y: currentY,
     size: 12,
-    font: notoSans,
+    font: helveticaFont,
     color: userColor,
   });
   currentY -= 20;
@@ -74,7 +72,7 @@ export async function generatePDF({
     x: margin,
     y: currentY,
     size: 12,
-    font: notoSans,
+    font: helveticaFont,
     color: userColor,
   });
   currentY -= 40;
@@ -107,13 +105,13 @@ export async function generatePDF({
       x: margin,
       y: currentY,
       size: 12,
-      font: notoSans,
+      font: helveticaBoldFont,
       color: senderColor,
     });
     currentY -= 25;
 
     // Contenido del mensaje
-    const lines = wrapText(message.content, contentWidth - 20, notoSans, 10);
+    const lines = wrapText(message.content, contentWidth - 20, helveticaFont, 10);
 
     for (const line of lines) {
       // Verificar si necesitamos nueva página
@@ -126,7 +124,7 @@ export async function generatePDF({
         x: margin + 15,
         y: currentY,
         size: 10,
-        font: notoSans,
+        font: helveticaFont,
         color: isUser ? userColor : assistantColor,
       });
       currentY -= 15;
@@ -138,7 +136,7 @@ export async function generatePDF({
       x: margin + 15,
       y: currentY,
       size: 8,
-      font: notoSans,
+      font: helveticaFont,
       color: rgb(0.6, 0.6, 0.6),
     });
     currentY -= 30;

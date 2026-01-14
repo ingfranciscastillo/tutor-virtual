@@ -10,7 +10,7 @@ export async function GET(
 ) {
   try {
     const user = await currentUser();
-    const chatId = params.id;
+    const chatId = await params.id;
 
     // Verificar que el chat pertenece al usuario (si está autenticado)
     if (user) {

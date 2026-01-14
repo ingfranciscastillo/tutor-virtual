@@ -25,9 +25,10 @@ export default async function SubjectPage({
 }: SubjectPageProps) {
   const user = await currentUser();
   const param = await params;
+  const searchParam = await searchParams;
 
   // Si no hay nivel, redirigir a la página principal
-  if (!searchParams.level) {
+  if (!searchParam.level) {
     redirect("/");
   }
 
@@ -47,8 +48,8 @@ export default async function SubjectPage({
       .where(
         and(
           eq(chats.userId, user.id),
-          eq(chats.subject, params.id),
-          eq(chats.level, searchParams.level)
+          eq(chats.subject, param.id),
+          eq(chats.level, searchParam.level)
         )
       )
       .orderBy(chats.createdAt);
@@ -59,9 +60,9 @@ export default async function SubjectPage({
         .insert(chats)
         .values({
           userId: user.id,
-          subject: params.id,
-          level: searchParams.level,
-          title: `${subject.name} - ${searchParams.level}`,
+          subject: param.id,
+          level: searchParam.level,
+          title: `${subject.name} - ${searchParam.level}`,
         })
         .returning();
 
@@ -88,7 +89,7 @@ export default async function SubjectPage({
             <div className="flex items-center space-x-2">
               <subject.icon className="h-6 w-6 text-indigo-600" />
               <h1 className="text-xl font-bold text-gray-900">
-                {subject.name} - {searchParams.level}
+                {subject.name} - {searchParam.level}
               </h1>
             </div>
           </div>
@@ -107,8 +108,8 @@ export default async function SubjectPage({
             <HistoryList
               chats={userChats}
               currentChatId={currentChatId}
-              subject={params.id}
-              level={searchParams.level}
+              subject={param.id}
+              level={searchParam.level}
             />
           </div>
 
@@ -116,8 +117,8 @@ export default async function SubjectPage({
           <div className="lg:col-span-3">
             <ChatBox
               chatId={currentChatId}
-              subject={params.id}
-              level={searchParams.level}
+              subject={param.id}
+              level={searchParam.level}
               subjectName={subject.name}
               userId={user?.id}
             />

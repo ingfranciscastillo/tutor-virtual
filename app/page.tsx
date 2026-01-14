@@ -1,5 +1,5 @@
-import { FeatureSection } from "@/components/Features";
-import { FooterSection } from "@/components/Footer";
+import FeaturesSection from "@/components/Features";
+import FooterSection from "@/components/Footer";
 import { HeroSection } from "@/components/Header";
 import { ModeToggle } from "@/components/ModeToggle";
 import { SubjectSelector } from "@/components/SubjectSelector";
@@ -42,7 +42,7 @@ export default async function HomePage() {
       {/* Hero Section */}
       <main className="container mx-auto px-4 py-12">
         <HeroSection />
-        <FeatureSection />
+        <FeaturesSection />
         <SubjectSelector />
         <FooterSection />
       </main>

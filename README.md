@@ -13,14 +13,14 @@ Una aplicación web donde estudiantes pueden seleccionar una materia, escribir p
 - ✅ Exportación a PDF
 - ✅ Autenticación con Clerk
 - ✅ Base de datos con Neon + Drizzle ORM
-- ✅ Soporte para OpenAI y Anthropic
+- ✅ Integración con Groq AI
 
 ## Stack Tecnológico
 
 - **Framework**: Next.js 15 (App Router) + TypeScript
 - **UI**: Tailwind CSS + ShadCN UI
 - **Formularios**: react-hook-form + Zod
-- **IA**: AI SDK (OpenAI/Anthropic)
+- **IA**: AI SDK de Vercel con Groq AI
 - **Base de datos**: Neon PostgreSQL + Drizzle ORM
 - **Autenticación**: Clerk
 - **Subida de archivos**: UploadThing (opcional)
@@ -63,20 +63,14 @@ Configura las siguientes variables:
 2. Crea una nueva aplicación
 3. Copia las claves a `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` y `CLERK_SECRET_KEY`
 
-#### IA (Elige uno)
+#### IA (Groq)
 
-**Para OpenAI:**
-
-```env
-OPENAI_API_KEY=sk-...
-AI_PROVIDER=openai
-```
-
-**Para Anthropic:**
+1. Crea una cuenta en [Groq](https://console.groq.com)
+2. Genera una API key
+3. Añade la clave a tu archivo `.env.local`:
 
 ```env
-ANTHROPIC_API_KEY=sk-ant-...
-AI_PROVIDER=anthropic
+GROQ_API_KEY=gsk_...
 ```
 
 ### 4. Ejecuta migraciones
@@ -156,21 +150,15 @@ Esquema principal:
 - `chats` - Sesiones de chat por materia/nivel
 - `messages` - Mensajes individuales (pregunta/respuesta)
 
-## Cambiar proveedor de IA
+## Configuración de IA
 
-Para cambiar entre OpenAI y Anthropic, simplemente modifica la variable de entorno:
+La aplicación utiliza Groq AI a través del AI SDK de Vercel. Solo necesitas configurar tu API key en el archivo `.env.local`:
 
 ```env
-# Para OpenAI
-AI_PROVIDER=openai
-OPENAI_API_KEY=sk-...
-
-# Para Anthropic
-AI_PROVIDER=anthropic
-ANTHROPIC_API_KEY=sk-ant-...
+GROQ_API_KEY=gsk_...
 ```
 
-El código detecta automáticamente el proveedor y ajusta la configuración.
+Puedes obtener tu API key gratuita en [Groq Console](https://console.groq.com).
 
 ## Personalización de prompts
 
