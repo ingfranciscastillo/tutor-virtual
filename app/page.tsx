@@ -6,7 +6,7 @@ import { SubjectSelector } from "@/components/SubjectSelector";
 import { Button } from "@/components/ui/button";
 import { UserButton, SignInButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
-import { Brain } from "lucide-react";
+import { GraduationCap } from "lucide-react";
 
 export default async function HomePage() {
   const user = await currentUser();
@@ -16,10 +16,8 @@ export default async function HomePage() {
       {/* Header */}
       <header className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center space-x-2">
-          <Brain className="h-8 w-8 text-gray-900 dark:text-white" />
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Tutor Virtual
-          </h1>
+          <GraduationCap className="h-8 w-8 text-accent" />
+          <h1 className="text-2xl font-bold text-accent">EduAI</h1>
         </div>
 
         <div className="flex items-center space-x-4">
@@ -44,8 +42,8 @@ export default async function HomePage() {
         <HeroSection />
         <FeaturesSection />
         <SubjectSelector />
-        <FooterSection />
       </main>
+      <FooterSection />
     </div>
   );
 }

@@ -6,11 +6,12 @@ import { eq, and } from "drizzle-orm";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await currentUser();
-    const chatId = await params.id;
+    const { id } = await params;
+    const chatId = id;
 
     // Verificar que el chat pertenece al usuario (si está autenticado)
     if (user) {

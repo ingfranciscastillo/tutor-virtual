@@ -31,7 +31,10 @@ export function SubjectSelector() {
   };
 
   return (
-    <section className="bg-zinc-50 py-16 md:py-32 dark:bg-transparent">
+    <section
+      id="subjectSelector"
+      className="bg-zinc-50 py-16 md:py-32 dark:bg-transparent"
+    >
       <div className="@container mx-auto max-w-5xl px-6">
         <Card>
           <CardHeader className="text-center">

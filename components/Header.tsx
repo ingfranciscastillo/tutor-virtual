@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SignInButton, useUser } from "@clerk/nextjs";
+import Link from "next/link";
 
 export const HeroSection = () => {
   const { user } = useUser();
@@ -66,7 +67,13 @@ export const HeroSection = () => {
             </p>
           </div>
           <div className="flex flex-row gap-3">
-            {user ? null : (
+            {user ? (
+              <>
+                <Button variant={"outline"}>
+                  <a href="#subjectSelector">Comenzar ahora</a>
+                </Button>
+              </>
+            ) : (
               <SignInButton mode="modal">
                 <Button
                   variant={"outline"}

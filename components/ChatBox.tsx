@@ -52,10 +52,21 @@ export function ChatBox({ chatId, subject, level, subjectName }: ChatBoxProps) {
     resolver: zodResolver(messageSchema),
   });
 
+  // Actualizar currentChatId cuando cambie el prop chatId
+  useEffect(() => {
+    if (chatId !== currentChatId) {
+      setCurrentChatId(chatId);
+      setMessages([]); // Limpiar mensajes al cambiar de chat
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatId]);
+
   // Cargar mensajes del chat
   useEffect(() => {
     if (currentChatId) {
       loadChatHistory(currentChatId);
+    } else {
+      setMessages([]); // Limpiar mensajes si no hay chatId
     }
   }, [currentChatId]);
 

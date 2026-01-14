@@ -3,8 +3,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { History, MessageCircle, Plus } from "lucide-react";
+import { History, MessageCircle, Plus, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface Chat {
   id: string;
@@ -27,25 +30,61 @@ export function HistoryList({
   subject,
   level,
 }: HistoryListProps) {
+  const [isCreating, setIsCreating] = useState(false);
+  const router = useRouter();
+
+  const handleNewChat = async () => {
+    setIsCreating(true);
+    try {
+      const response = await fetch("/api/chat/new", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subject, level }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Redirigir a la nueva conversación
+        router.push(`/subject/${subject}?level=${level}&chat=${result.chatId}`);
+        router.refresh();
+      } else {
+        throw new Error(result.error || "Error al crear el chat");
+      }
+    } catch (error) {
+      console.error("Error creando nuevo chat:", error);
+      toast("No se pudo crear la nueva conversación. Intenta de nuevo.");
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
   return (
-    <Card className="h-full">
-      <CardHeader className="pb-3">
+    <Card className="h-full flex flex-col">
+      <CardHeader className="pb-3 flex-shrink-0">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg flex items-center space-x-2">
             <History className="h-5 w-5" />
             <span>Historial</span>
           </CardTitle>
 
-          <Link href={`/subject/${subject}?level=${level}`}>
-            <Button size="sm" variant="outline">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleNewChat}
+            disabled={isCreating}
+          >
+            {isCreating ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
               <Plus className="h-4 w-4" />
-            </Button>
-          </Link>
+            )}
+          </Button>
         </div>
       </CardHeader>
 
-      <CardContent className="p-0">
-        <ScrollArea className="h-[calc(100vh-300px)]">
+      <CardContent className="p-0 flex-1 overflow-hidden">
+        <ScrollArea className="h-full">
           <div className="px-6 pb-6">
             {chats.length === 0 ? (
               <div className="text-center text-gray-500 py-8">
@@ -77,12 +116,13 @@ export function HistoryList({
                           : "border-gray-200"
                       }`}
                     >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0 overflow-hidden">
                           <div
                             className={`text-sm font-medium truncate ${
                               isActive ? "text-indigo-900" : "text-gray-900"
                             }`}
+                            title={chat.title}
                           >
                             {chat.title}
                           </div>
@@ -92,7 +132,7 @@ export function HistoryList({
                         </div>
 
                         {isActive && (
-                          <div className="ml-2">
+                          <div className="ml-2 flex-shrink-0">
                             <div className="h-2 w-2 bg-indigo-600 rounded-full"></div>
                           </div>
                         )}

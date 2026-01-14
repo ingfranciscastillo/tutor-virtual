@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Tutor Virtual por Materia",
+  title: "EduAI",
   description: "Aprende cualquier materia con tu tutor virtual personalizado",
 };
 
@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="es" suppressHydrationWarning>
+      <html lang="es" className="scroll-smooth" suppressHydrationWarning>
         <body>
           <ThemeProvider
             attribute="class"

@@ -8,7 +8,7 @@ import Link from "next/link";
 import { SUBJECTS } from "@/lib/constants";
 import { db } from "@/lib/db";
 import { chats } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 
 interface SubjectPageProps {
   params: {
@@ -16,6 +16,7 @@ interface SubjectPageProps {
   };
   searchParams: {
     level?: string;
+    chat?: string;
   };
 }
 
@@ -37,7 +38,7 @@ export default async function SubjectPage({
     redirect("/");
   }
 
-  // Obtener o crear chat
+  // Obtener chats del usuario
   let userChats: any[] = [];
   let currentChatId: string | null = null;
 
@@ -52,23 +53,37 @@ export default async function SubjectPage({
           eq(chats.level, searchParam.level)
         )
       )
-      .orderBy(chats.createdAt);
+      .orderBy(desc(chats.createdAt));
 
-    // Crear chat si no existe
-    if (userChats.length === 0) {
-      const [newChat] = await db
-        .insert(chats)
-        .values({
-          userId: user.id,
-          subject: param.id,
-          level: searchParam.level,
-          title: `${subject.name} - ${searchParam.level}`,
-        })
-        .returning();
-
-      currentChatId = newChat.id;
+    // Si hay un parámetro chat en la URL, usarlo
+    if (searchParam.chat) {
+      // Verificar que el chat pertenece al usuario
+      const chatExists = userChats.find((chat) => chat.id === searchParam.chat);
+      if (chatExists) {
+        currentChatId = searchParam.chat;
+      } else {
+        // Si el chat no existe o no pertenece al usuario, usar el último chat
+        currentChatId = userChats.length > 0 ? userChats[userChats.length - 1].id : null;
+      }
     } else {
-      currentChatId = userChats[userChats.length - 1].id;
+      // Si no hay parámetro chat, usar el último chat o crear uno nuevo
+      if (userChats.length === 0) {
+        const [newChat] = await db
+          .insert(chats)
+          .values({
+            userId: user.id,
+            subject: param.id,
+            level: searchParam.level,
+            title: `${subject.name} - ${searchParam.level}`,
+          })
+          .returning();
+
+        currentChatId = newChat.id;
+        // Actualizar la lista de chats
+        userChats = [newChat];
+      } else {
+        currentChatId = userChats[userChats.length - 1].id;
+      }
     }
   }
 
