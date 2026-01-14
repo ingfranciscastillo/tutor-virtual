@@ -176,7 +176,11 @@ export async function generatePDF({
   const pdfBytes = await pdfDoc.save();
 
   // Crear elemento de descarga
-  const blob = new Blob([pdfBytes], { type: "application/pdf" });
+  // `pdfBytes` puede tiparse como Uint8Array<ArrayBufferLike> (p.ej. SharedArrayBuffer),
+  // y `Blob` en TS espera `BlobPart` con `ArrayBuffer` "real". Copiamos a un ArrayBuffer.
+  const pdfArrayBuffer = new ArrayBuffer(pdfBytes.byteLength);
+  new Uint8Array(pdfArrayBuffer).set(pdfBytes);
+  const blob = new Blob([pdfArrayBuffer], { type: "application/pdf" });
   const url = URL.createObjectURL(blob);
 
   const link = document.createElement("a");
