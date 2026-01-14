@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Datos de entrada inválidos", details: error.errors },
+        { error: "Datos de entrada inválidos", details: error.message },
         { status: 400 }
       );
     }

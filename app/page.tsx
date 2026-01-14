@@ -16,8 +16,8 @@ export default async function HomePage() {
       {/* Header */}
       <header className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center space-x-2">
-          <GraduationCap className="h-8 w-8 text-accent" />
-          <h1 className="text-2xl font-bold text-accent">Lurny AI</h1>
+          <GraduationCap className="h-8 w-8 text-primary" />
+          <h1 className="text-2xl font-bold text-primary">Lurny AI</h1>
         </div>
 
         <div className="flex items-center space-x-4">

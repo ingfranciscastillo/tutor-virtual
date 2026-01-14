@@ -31,17 +31,14 @@ export function SubjectSelector() {
   };
 
   return (
-    <section
-      id="subjectSelector"
-      className="bg-zinc-50 py-16 md:py-32 dark:bg-transparent"
-    >
-      <div className="@container mx-auto max-w-5xl px-6">
+    <section id="subjectSelector" className="py-16 md:py-32">
+      <div className="container mx-auto max-w-5xl px-6">
         <Card>
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">
               Comienza tu sesión de aprendizaje
             </CardTitle>
-            <CardDescription className="text-slate-900 dark:text-white">
+            <CardDescription className="text-primary">
               Selecciona la materia y tu nivel educativo para recibir
               explicaciones personalizadas
             </CardDescription>

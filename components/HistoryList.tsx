@@ -61,7 +61,7 @@ export function HistoryList({
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className="pb-3 flex-shrink-0">
+      <CardHeader className="pb-3 shrink-0">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg flex items-center space-x-2">
             <History className="h-5 w-5" />
@@ -132,7 +132,7 @@ export function HistoryList({
                         </div>
 
                         {isActive && (
-                          <div className="ml-2 flex-shrink-0">
+                          <div className="ml-2 shrink-0">
                             <div className="h-2 w-2 bg-indigo-600 rounded-full"></div>
                           </div>
                         )}

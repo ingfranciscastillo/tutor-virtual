@@ -63,7 +63,8 @@ export default async function SubjectPage({
         currentChatId = searchParam.chat;
       } else {
         // Si el chat no existe o no pertenece al usuario, usar el último chat
-        currentChatId = userChats.length > 0 ? userChats[userChats.length - 1].id : null;
+        currentChatId =
+          userChats.length > 0 ? userChats[userChats.length - 1].id : null;
       }
     } else {
       // Si no hay parámetro chat, usar el último chat o crear uno nuevo
