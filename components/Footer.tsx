@@ -12,7 +12,7 @@ export default function FooterSection() {
             className="flex items-center space-x-2 size-fit"
           >
             <GraduationCap className="h-8 w-8 text-accent" />
-            <h1 className="text-2xl font-bold text-accent">EduAI</h1>
+            <h1 className="text-2xl font-bold text-accent">Lurny AI</h1>
           </Link>
           <div className="flex flex-wrap justify-center gap-6 text-sm">
             <Link
